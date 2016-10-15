@@ -2,6 +2,13 @@
 .globl _start  		/* these next two lines are  */ 
 _start:			/* to stop a warning message */
 
+b main
+
+.section .text
+main:
+
+mov sp,#0x8000
+
 pinNum .req r0		/* set pinNum alias to r0 */
 pinFunc .req r1		/* set pinFunc alias to r1 */
 mov pinNum,#16		/* set pinNum to 16 */
@@ -12,6 +19,12 @@ bl SetGpioFunction	/* call function to set pin 16 to output */
 
 pauseTime .req r4	/* set pauseTime alias to r4 */
 mov pauseTime,#0x400	/* set pauseTime to 1024 */
+loopLength .req r5
+mov loopLength,#0x64
+reversing .req r6
+mov reversing,#0
+loopPosition .req r7
+mov loopPosition,#1
 
 loop$:			/* loop label */
 
@@ -29,7 +42,17 @@ bl SetGpio		/* call SetGpio function, sets pin 16 to on */
 mov r0,pauseTime	/* set r0, sleepTime to pauseTime */
 bl Sleep		/* calls sleep function */
 
-add pauseTime,#0x400	/* add 1024 to pausetime to slow down blinking */ 
+cmp loopPosition,loopLength
+movhi reversing,#1
+
+cmp loopPosition,#1
+movls reversing,#0
+
+teq reversing,#0
+addeq pauseTime,#0x400	/* add 1024 to pausetime to slow down blinking */ 
+addeq loopPosition,#1
+subne pauseTime,#0x400 
+subne loopPosition,#1
 
 b loop$			/* branch to loop label */
 
