@@ -16,7 +16,9 @@ mov r0,#16
 mov r1,#0
 bl SetGpio
 
-bl pause
+/* bl pause */
+mov r0,#0x100000
+bl Sleep
 
 mov r0,#16
 mov r1,#1
