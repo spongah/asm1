@@ -27,6 +27,7 @@ str r1,[r0]		/* store r1 in r0, r1 is pin function value */
 			/* r0 is gpio controller address plus 4 per 10 pins */
 pop {pc}		/* pop lr off stack and place in pc, program counter */
 
+
 .globl SetGpio		/* make function available to all */
 SetGpio:		/* branch label */
 pinNum .req r0		/* set register alias for pin number */

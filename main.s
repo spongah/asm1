@@ -10,30 +10,26 @@ bl SetGpioFunction
 .unreq pinNum
 .unreq pinFunc
 
+pauseTime .req r4
+mov r4,#0x400
+
 loop$:		/* loop label */
 
 mov r0,#16
 mov r1,#0
 bl SetGpio
 
-/* bl pause */
-mov r0,#0x100000
+mov r0,r4
 bl Sleep
 
 mov r0,#16
 mov r1,#1
 bl SetGpio
 
-bl pause
+mov r0,r4
+bl Sleep
+
+add r4,#0x400
 
 b loop$		/* branch to loop label */
-		/* this keeps the processor happy in an infinite loop */
 
-.globl pause
-pause:
-mov r2,#0x3F0000
-wait1$:
-	sub r2,#1
-	cmp r2,#0
-	bne wait1$
-mov pc,lr
